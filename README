@@ -2,7 +2,7 @@ Just some implementations I had to do in my lessons, posting them so I can work 
 
 How to use:
 This script works only for PGM file format images
-genCrypt first applies Hamming code to the image, increasing its size by 2 because of an useless bit (7/8 bits used): result image name "enc_YOUR_ORIGINAL_FILE_NAME"
+genCrypt first applies Hamming code to the image, increasing its size by 2 because of an useless bit (7/8 bits used for an original 4 bit message): result image name "enc_YOUR_ORIGINAL_FILE_NAME"
 genErr changes a random bit in every single pixel: result image name "err_YOUR_ORIGINAL_FILE_NAME"
 genCorr recover the original image from the corrupted one: result image name "cor_YOUR_ORIGINAL_FILE_NAME"
 
