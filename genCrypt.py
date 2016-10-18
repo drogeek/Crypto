@@ -10,7 +10,7 @@ G=[0b0111000, 0b1010100,0b1100010, 0b1110001]
 H=[0b1000111, 0b101011, 0b0011101]
 
 def codage(nbr):
-"""compute Hamming code of a 4 bit number"""
+	"""compute Hamming code of a 4 bit number"""
 	mask=1
 	result=0
 	for index in range(len(G)):
