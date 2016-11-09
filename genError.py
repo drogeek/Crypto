@@ -7,8 +7,14 @@ if len(sys.argv)<2:
 	print("Missing argument")
 	sys.exit()
 
+target_path = '.'
+if len(sys.argv) == 3:
+	target_path=sys.argv[2]
+
+
 with open(sys.argv[1]) as image:
-	with open("e_"+sys.argv[1],"w+") as err_image:
+	splitedPath = sys.argv[1].split('/')
+	with open(target_path+'/'+"e_"+splitedPath[-1],"w+") as err_image:
 		#writting and skipping the 3 first lines
 		for i in range(1,4):
 			err_image.write(next(image))

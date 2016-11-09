@@ -6,6 +6,10 @@ if len(sys.argv) < 2:
 	print("missing argument")
 	sys.exit()
 
+target_path = '.'
+if len(sys.argv) == 3:
+	target_path=sys.argv[2]
+
 G=[0b0111000, 0b1010100,0b1100010, 0b1110001]
 H=[0b1000111, 0b101011, 0b0011101]
 #map for syndromes
@@ -20,7 +24,8 @@ def getSyndrome(nbr):
 	return result
 
 with open(sys.argv[1]) as img:
-	with open("cor_"+sys.argv[1],"w+") as cor_img:
+	splitedPath=sys.argv[1].split('/')
+	with open(target_path+'/'+"cor_"+splitedPath[-1],"w+") as cor_img:
 		#extract and write the 3 first lines
 		for i in range(1,4):
 			cor_img.write(next(img))

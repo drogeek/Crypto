@@ -6,6 +6,11 @@ if len(sys.argv) < 2:
 	print("missing argument")
 	sys.exit()
 
+target_path = '.'
+if len(sys.argv) == 3:
+	target_path=sys.argv[2]
+
+
 G=[0b0111000, 0b1010100,0b1100010, 0b1110001]
 H=[0b1000111, 0b101011, 0b0011101]
 
@@ -19,8 +24,9 @@ def codage(nbr):
 	return result
 			
 with open(sys.argv[1]) as img:
-	with open("enc_"+sys.argv[1],"w+") as enc_img:
-		#extract and write the 3 first lines
+	splitedPath = sys.argv[1].split('/')
+	with open(target_path+'/'+"enc_"+splitedPath[-1],"w+") as enc_img:
+	#extract and write the 3 first lines
 		for i in range(1,4):
 			enc_img.write(next(img))
 		#calculate Hamming code for every byte cut in two equal parts
