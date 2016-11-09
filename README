@@ -1,7 +1,9 @@
 Just some implementations I had to do in my lessons, posting them so I can work on them remotly easily
 
 How to use:
-This script works only for PGM file format images
+/!\ This script works for PGM file format images only
+change the folder where to look for your image and the name of your image in the makefile, and type "make"
+
 genCrypt first applies Hamming code to the image, increasing its size by 2 because of an useless bit (7/8 bits used for an original 4 bit message): result image name "enc_YOUR_ORIGINAL_FILE_NAME"
 genErr changes 1 random bit in each two parts of every single pixel: result image name "err_YOUR_ORIGINAL_FILE_NAME"
 genCorr recovers the original image from the corrupted one: result image name "cor_YOUR_ORIGINAL_FILE_NAME"
