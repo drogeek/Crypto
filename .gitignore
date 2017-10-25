@@ -3,3 +3,4 @@
 *.swo
 *.tar.gz
 *.recup
+__pycache__/
