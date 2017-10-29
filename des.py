@@ -1,4 +1,6 @@
 from tables_des import *
+from functools import reduce
+from itertools import product,starmap,repeat,islice
 
 verif_S = {0x8b8e5abecc6d : 0xb06083b1, 0xce5283e393ca : 0xcd2b5bef, 0xe8c81f1e2171 : 0x38965645, 0xa318b0c9dac2 : 0x99ef1ff4, 0xeac70a17bb02 : 0x375ab5d4}
 def sbox(n,a):
@@ -30,37 +32,40 @@ def CalculKi(K):
 
 #attention C et D doivent etre consideres stockes que sur 28 bits 
 
-  PC1K = 0
-  ki = [0]*16
-  i = 0 
-
-  def decomp_bit(x):
-    while x>0:
-      yield x&1
-      x>>=1
+  
+  def shrick_perm(x, shrick_perm_list):
+    res=0
+    for i,shift in enumerate(shrick_perm_list):
+        res |= ((x>>(shift-1))&1)<<i
+    return res
 
   # Application de la permutation PC1 sur la cle K
   # le resultat est stocke dans PC1K
-  K_decomp=list(decomp_bit(K))
-  for power,bit in enumerate(( K_decomp[i] for i in PC1 )):
-    PC1K+=bit*2**power
-
+  PC1K = shrick_perm(K,PC1)
   C = (PC1K >> 28) & MASK28 
-  D = PC1K & MASK28 ;
-  i = 0
+  D = PC1K & MASK28
+
   # Calcul des 16 cles intermediaires
-  while (i < 16):
-      # Application du shift circulaire  sur C et D
-      # A COMPLETER
-      tempo = (C << 28) | D;
-      ki[i] = 0;
-      j = 0
-      # Application de la permutation PC2 sur tempo afin d'obtenir la cle de tour numero i
-      # le resultat est stocke dans ki[i]
-      while (j < 48):
-        break
-          # A COMPLETER
-      i = i + 1
+
+  def circular_shift(shift,nbr):
+    nbr = nbr << shift
+    overflow = nbr >> 28
+    nbr = (nbr&MASK28) | overflow
+    return nbr
+
+  #didn't find out how to do that in a functional way
+  shifted_Cs = [C]
+  shifted_Ds = [D]
+  for shift in LS:
+    shifted_Cs.append(circular_shift(shift,shifted_Cs[-1]))
+    shifted_Ds.append(circular_shift(shift,shifted_Ds[-1]))
+
+  combined_keys = starmap(lambda C,D: (C<<28) | D, zip(shifted_Cs,shifted_Ds))
+  #print(list(map(lambda x : format(x,'0x'), combined_keys)))
+
+  # Application de la permutation PC2
+  next(combined_keys)
+  ki = tuple(map(shrick_perm, combined_keys, repeat(PC2)))
   return(ki)
 
 MASK6 = 0x3f
@@ -69,58 +74,52 @@ MASK32 = 0xffffffff
 K=0x1123456789abcdef
 M=0xaaaabbbbccccdddd
 
-Ki = CalculKi(K);
+Ki = CalculKi(K)
+print(tuple(map(lambda x : format(x,'0x'), Ki)))
 
 
 #Application de la Permutation IP sur le message M 
 # le resultat est stocke dans tempo
 
 tempo = 0
-i = 0
-while i < 64:
-      tempo |= (((M >> (IP[i] -1)) & 1) << i)
-      i = i + 1
+for i,ip in enumerate(IP):
+      tempo |= (((M >> (ip -1)) & 1) << i)
 
 #les 16 tours du DES 
 L = (tempo >> 32) 
 R = tempo & MASK32 
-i = 0
-while i < 16 :
+
+for subkey in Ki:
   Z = L 
   L = R 
 
   # expansion de R via la table E
   # resultat stocke dans tempo 
   tempo = 0 
-  j = 0
-  while j < 48:
-    break
-    # A COMPLETER
+  for index,shift in enumerate(E):
+    tempo |= ((R>>(shift-1))&1)<<index
 
   # ajout de la clef de tour
-  tempo ^= Ki[i] 
+  tempo ^= subkey
 
   # action des boites S
-#tempo = S(tempo);
+  tempo = S(tempo);
 
   # Application de la permutation P sur tempo
   # on stocke le resultat dans R
   R = 0 
-  j = 0
-  while j < 32:
-    break
-      # A COMPLETER
+  for index,shift in enumerate(P):
+    R |= ((tempo>>(shift-1))&1)<<index
   R ^= Z 
   i = i + 1
 
 # echange final entre R et L
-# A COMPLETER
+T = R<<32
+T |= L
 
 # Application de la Permutation IP^-1 sur (R16L16)
 # le resultat est stocke dans C
 C = 0
-i = 0 
-while i < 64:
-  break
-  # A COMPLETER
+for index, shift in enumerate(InvIP):
+    C |= ((T>>(shift-1))&1)<<index
 print("Crypto = ",hex(C))
