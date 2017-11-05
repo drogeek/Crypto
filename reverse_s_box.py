@@ -1,6 +1,7 @@
 from tables_des import sBox,P,E,IP
-from itertools import product, repeat
+from itertools import product, repeat, starmap
 from operator import xor
+from des import DES
 
 correspondance_messages_encryptions = ( 
 (0xef6b0deebd3cd2f5 , 0xef6f4debf838d3b4),
@@ -82,4 +83,17 @@ for m_perm,c_perm in correspondance_messages_encryptions:
     tmp.append(set(possible_keys))
 
 result = set.intersection(*tmp)
-print(list(map(format,result, repeat('0x'))))
+
+#we verify the result
+identity=lambda x : [x]
+for key_found in result:
+    assert(all(starmap(lambda m,c: DES(m,key_found,compute_ki=identity).C == c, correspondance_messages_encryptions)))
+
+if len(result) == 1:
+    print("The key is {}".format(hex(list(result)[0])))
+else:
+    print("Not enough (message,cypher) to determine with certitude which key it was")
+    print("the possible keys are:")
+    print(tuple(map(format, result, repeat('0x'))))
+
+
