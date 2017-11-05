@@ -35,7 +35,7 @@ assert(all([ P_inv[P[i]-1]-1 == i for i in range(len(P)) ]))
 
 MASK32=2**32-1
 MASK4=2**4-1
-#we try to determine, from the output, what was the input of one turn of the DES protocol
+#we try to determine the common key, from different input and output on one turn of DES
 def reverse_S(e,o):
     Re, Le = e&MASK32, e>>32
     Ro, Lo = o&MASK32, o>>32
