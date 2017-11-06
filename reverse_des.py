@@ -4,16 +4,16 @@ from operator import xor
 from des import DES
 
 correspondance_messages_encryptions = ( 
-(0xef6b0deebd3cd2f5 , 0xef6f4debf838d3b4),
-(0xe043297aeb7383fe , 0xe056286bbb2287af),
-(0x9896ad0cb0dd7c3c , 0xdc92ad5ca18d7928),
-(0x2702e3f8a51fc06c , 0x3342a6a8f51fd439),
-(0x3aa85ac87dca8de3 , 0x6aed1bdd78cbd8b2),
-(0x9613b7e714a7d7ed , 0x8707e6b711e6c2ad),
-(0x0a604f9d1d678bfc , 0x1a210acd4972dab9),
-(0xb6dbaf82da4909a1 , 0xb2cbead78b1c4de4),
-(0x1c13fdda4016fe02 , 0x5d06a8ce0502bf42),
-(0xdc26ed238d818d56 , 0x9d62f8339d95cd07)
+(0xef6b0deebd3cd2f5 , 0xaf6b1defe93c93e5),
+(0xe043297aeb7383fe , 0xb012397faa2282bb),
+(0x9896ad0cb0dd7c3c , 0x8dd6e958b19d7c29),
+(0x2702e3f8a51fc06c , 0x7242b7bdb41f8169),
+(0x3aa85ac87dca8de3 , 0x6be95fd8389fccb7),
+(0x9613b7e714a7d7ed , 0x9203b7b311e2d6f8),
+(0x0a604f9d1d678bfc , 0x5b214fd80822cebd),
+(0xb6dbaf82da4909a1 , 0xf7cfaad3da184db1),
+(0x1c13fdda4016fe02 , 0x1946e9cb1553af06),
+(0xdc26ed238d818d56 , 0x9926bd368d81d957)
 )
 def reverse_sBox(n,y):
     possible_index = map(lambda i : i.index(y), zip(*[iter(sBox[n])]*16))
